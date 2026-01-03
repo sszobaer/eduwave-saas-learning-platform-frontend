@@ -81,7 +81,7 @@ export default function LoginPage() {
 
           <p className="text-sm text-gray-400 text-center mt-4">
             Not registered?{" "}
-            <Link href="/registration" className="text-indigo-500 hover:text-indigo-400">
+            <Link href="/register" className="text-indigo-500 hover:text-indigo-400">
               Register
             </Link>
           </p>
