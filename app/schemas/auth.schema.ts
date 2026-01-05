@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const roles = ["student", "teacher", "admin"] as const;
+export const roles = ["student", "teacher", "admin"];
 
 export const registerSchema = z.object({
   full_name: z
@@ -10,7 +10,7 @@ export const registerSchema = z.object({
     .regex(/^[A-Za-z\s]+$/, "Name must contain only alphabets"),
 
   email: z.string().email("Invalid email address")
-  .min(1, "Email is required"),
+    .min(1, "Email is required"),
 
   password: z
     .string()
@@ -20,9 +20,7 @@ export const registerSchema = z.object({
 
   profile_img: z.any().optional(),
 
-  role_name: z.enum(roles, {
-    errorMap: () => ({ message: "Select a valid role" }),
-  }),
+  role_name: z.enum(roles, { message: "Select a valid role" }),
 });
 
 export type RegisterFormData = z.infer<typeof registerSchema>;

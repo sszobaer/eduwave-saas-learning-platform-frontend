@@ -5,27 +5,66 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { toast, ToastContainer } from "react-toastify";
+import { api } from "../lib/axios";
+import {
+    loginSchema,
+    type LoginFormData,
+} from "../schemas/login.schema";
+import { useRouter } from "next/navigation";
 
-const loginSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
-});
-
-type LoginFormInputs = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>({
-    resolver: zodResolver(loginSchema),
-  });
+   const {
+          register,
+          handleSubmit,
+          formState: { errors },
+      } = useForm<LoginFormData>({
+          resolver: zodResolver(loginSchema),
+      });
 
-  const onSubmit = (data: LoginFormInputs) => {
-    console.log("Login Data:", data);
-  };
+  const onSubmit = async (data: LoginFormData) => {
+  try {
+    const response = await api.post(
+      "auth/login",
+      {
+        email: data.email,
+        password: data.password,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+
+    toast.success("✅ Login Successful", {
+      position: "top-right",
+      autoClose: 3000,
+      theme: "dark",
+    });
+
+    // 👉 Redirect to dashboard
+    router.push("/dashboard");
+
+  } catch (err: any) {
+    const message =
+      err.response?.status === 401
+        ? "❌ Email or password is wrong"
+        : "❌ Login failed";
+
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 3000,
+      theme: "dark",
+    });
+  }
+};
 
   return (
     <>
+    <ToastContainer/>
       <Navbar />
       <div className="min-h-screen flex items-center justify-center bg-gray-900">
         <div className="w-full max-w-md bg-gray-800 rounded-xl shadow-lg p-8">
