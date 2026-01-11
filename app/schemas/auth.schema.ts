@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const roles = ["student", "teacher", "admin"];
+export const roles = ["STUDENT", "TEACHER", "ADMIN"];
 
 export const registerSchema = z.object({
   full_name: z
