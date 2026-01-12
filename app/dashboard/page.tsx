@@ -1,39 +1,36 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { api } from "@/app/lib/axios"; // make sure your axios instance has withCredentials: true by default
-import { authStore } from "../store/auth.store";
+import { useEffect, useContext } from "react";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "../context/AuthContext";
 
-const Dashboard = () => {
-  const [data, setData] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
+export default function DashboardRedirect() {
+  const { user, loading } = useContext(AuthContext);
+  const router = useRouter();
 
   useEffect(() => {
-    const fetchDashboard = async () => {
-      try {
-        const res = await api.get("/admin/dashboard", {
-          withCredentials: true, 
-        });
+    if (loading) return; // wait until user is loaded
 
-        console.log("Dashboard response:", res.data);
-        setData(res.data);
-      } catch (err: any) {
-        console.error("Error fetching dashboard:", err);
-        setError(err.response?.data?.message || err.message);
-      }
-    };
+    if (!user) {
+      router.push("/login");
+      return;
+    }
 
-    fetchDashboard();
-  }, [authStore.getState().accessToken]);
+    switch (user.role) {
+      case "STUDENT":
+        router.push("/dashboard/student");
+        break;
+      case "ADMIN":
+        router.push("/dashboard/admin");
+        break;
+      case "TEACHER":
+        router.push("/dashboard/teacher");
+        break;
+      default:
+        router.push("/login");
+        break;
+    }
+  }, [user, loading]);
 
-  return (
-    <div className="p-4 text-white">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-      {error && <p className="text-red-500">Error: {error}</p>}
-      {data && <pre className="bg-gray-800 p-4 rounded">{JSON.stringify(data, null, 2)}</pre>}
-      {!data && !error && <p>Loading...</p>}
-    </div>
-  );
-};
-
-export default Dashboard;
+  return null; // or loader
+}
