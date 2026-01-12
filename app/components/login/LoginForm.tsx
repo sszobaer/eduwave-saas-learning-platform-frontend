@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
@@ -8,9 +8,9 @@ import { useRouter } from "next/navigation";
 import { Mail, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { LoginFormData, loginSchema } from "@/app/schemas/login.schema";
-import { api } from "@/app/lib/axios";
 import PasswordInput from "../auth/PasswordInput";
-import { authStore } from "@/app/store/auth.store";
+import { api } from "@/app/lib/axios";
+import { AuthContext } from "@/app/context/AuthContext";
 
 export default function LoginForm() {
     const [rememberMe, setRememberMe] = useState(false);
@@ -24,16 +24,20 @@ export default function LoginForm() {
         resolver: zodResolver(loginSchema),
     });
 
-
+    const { setUser } = useContext(AuthContext);
     const onSubmit = async (data: LoginFormData) => {
         try {
-            const res = await api.post(
-                "/auth/login",
+            const res = await api.post("/auth/login",
                 { email: data.email, password: data.password },
-                { withCredentials: true }
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    withCredentials: true,
+                }
             );
-            authStore.getState().setAccessToken(res.data.access_token);
-            
+            setUser(res.data.user);
+            localStorage.setItem("access_token", res.data.access_token);
             toast.success("✅ Login Successful", { theme: "dark" });
             router.push("/dashboard");
         } catch (err: any) {
@@ -45,6 +49,7 @@ export default function LoginForm() {
             );
         }
     };
+
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
