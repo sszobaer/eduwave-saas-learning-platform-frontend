@@ -1,3 +1,4 @@
+"use client"
 import { AuthContext } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import React, { useContext, useEffect } from 'react'
