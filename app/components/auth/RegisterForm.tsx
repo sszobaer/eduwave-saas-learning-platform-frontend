@@ -27,7 +27,7 @@ export default function RegisterForm() {
     api.get("/role/getall").then((res) => {
       setRoles(
         res.data.filter(
-          (r: any) => r.role_name.toLowerCase() !== "admin"
+          (r: any) => r.role_name !== "ADMIN"
         )
       );
     });

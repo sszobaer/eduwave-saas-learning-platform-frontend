@@ -44,7 +44,9 @@ export default function LoginForm() {
             toast.error(
                 err.response?.status === 400
                     ? "❌ Email or password is wrong"
-                    : "❌ Login failed",
+                    : err.response?.status === 401
+                    ? "❌You have no permission to login wait for approval"
+                    : "Login Failed",
                 { theme: "dark" }
             );
         }

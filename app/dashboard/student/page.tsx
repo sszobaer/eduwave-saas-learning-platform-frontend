@@ -15,6 +15,10 @@ const page = () => {
   }, [user, loading]);
 
   if (loading || !user) return <p>Loading...</p>;
+  return(
+    <>
+    </>
+  )
 }
 
 export default page
