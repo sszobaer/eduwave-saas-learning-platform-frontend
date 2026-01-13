@@ -2,18 +2,13 @@
 
 import { createContext, useState, useEffect, ReactNode } from "react";
 import { api } from "@/app/lib/axios";
+import { AuthorizedUser } from "../types/authorizedUser.type";
 
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-}
 
 interface AuthContextType {
-  user: User | null;
-  setUser: (user: User | null) => void;
-  loading: boolean; // new
+  user: AuthorizedUser | null;
+  setUser: (AuthorizedUser: AuthorizedUser | null) => void;
+  loading: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -22,23 +17,31 @@ export const AuthContext = createContext<AuthContextType>({
   loading: true,
 });
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+interface AuthProviderProps {
+  children: ReactNode;
+  initialUser?: AuthorizedUser | null; // optional initial user
+}
+
+export function AuthProvider({ children, initialUser = null }: AuthProviderProps) {
+  const [user, setUser] = useState<AuthorizedUser | null>(initialUser);
+  const [loading, setLoading] = useState(!initialUser); // loading only if no initial user
 
   useEffect(() => {
+    if (initialUser) return; // already have user
+
     const loadUser = async () => {
       try {
         const res = await api.get("/user/me", { withCredentials: true });
         setUser(res.data);
-      } catch (err) {
+      } catch {
         setUser(null);
       } finally {
         setLoading(false);
       }
     };
+
     loadUser();
-  }, []);
+  }, [initialUser]);
 
   return (
     <AuthContext.Provider value={{ user, setUser, loading }}>

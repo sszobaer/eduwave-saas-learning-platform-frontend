@@ -1,0 +1,44 @@
+import { UserService } from "@/app/services/user.service";
+import { User } from "@/app/types/user.type";
+
+
+interface UserActionsProps {
+  user: User;
+  refresh: () => void;
+}
+
+export default function UserActions({ user, refresh }: UserActionsProps) {
+  const toggleStatus = async () => {
+    if (user.isActive) {
+      await UserService.block(user.user_id);
+    } else {
+      await UserService.unblock(user.user_id);
+    }
+    refresh();
+  };
+
+  const deleteUser = async () => {
+    await UserService.delete(user.user_id);
+    refresh();
+  };
+
+  return (
+    <div className="flex justify-end gap-2">
+      <button
+        onClick={toggleStatus}
+        className={`px-3 py-1 rounded text-sm ${
+          user.isActive ? "bg-yellow-600" : "bg-green-600"
+        }`}
+      >
+        {user.isActive ? "Block" : "Unblock"}
+      </button>
+
+      <button
+        onClick={deleteUser}
+        className="px-3 py-1 rounded bg-red-600 text-sm"
+      >
+        Delete
+      </button>
+    </div>
+  );
+}
