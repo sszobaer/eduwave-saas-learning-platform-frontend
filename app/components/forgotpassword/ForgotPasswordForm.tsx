@@ -10,7 +10,6 @@ import { api } from "@/app/lib/axios";
 import { ForgotPasswordData, forgotPasswordSchema } from "@/app/schemas/forgotpassword.schema";
 
 export default function ForgotPasswordForm() {
-  const [email, setEmail] = useState("");
   const router = useRouter();
 
   const { register, handleSubmit, formState: { errors } } = useForm<ForgotPasswordData>({
@@ -19,6 +18,8 @@ export default function ForgotPasswordForm() {
 
   const onSubmit = async (data: ForgotPasswordData) => {
     try {
+      // Store the email in localStorage
+      localStorage.setItem("forgotPasswordEmail", data.email);
       await api.post("/auth/forgot-password", { email: data.email });
       toast.success("✅ OTP sent to your email", { theme: "dark" });
       router.push("/verifyotp");  // Navigate to the OTP verification page
