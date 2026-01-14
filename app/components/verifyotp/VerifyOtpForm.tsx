@@ -1,73 +1,106 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { api } from "@/app/lib/axios";
-import { VerifyOtpData, verifyOtpSchema } from "@/app/schemas/verifyotp.schema";
 
 export default function VerifyOtpForm() {
   const router = useRouter();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [email, setEmail] = useState("");
 
-  const { register, handleSubmit, formState: { errors } } = useForm<VerifyOtpData>({
-    resolver: zodResolver(verifyOtpSchema),
-  });
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("forgotPasswordEmail");
+    if (!storedEmail) {
+      toast.error("❌ Session expired", { theme: "dark" });
+      router.push("/auth/forgot-password");
+      return;
+    }
+    setEmail(storedEmail);
+  }, [router]);
 
-  const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const value = e.target.value;
-    if (/[^0-9]/.test(value)) return;  // Allow only numbers
+  const handleOtpChange = (value: string, index: number) => {
+    if (!/^\d?$/.test(value)) return;
 
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
-    if (index < 5 && value) {
-      document.getElementById(`otp-${index + 1}`)?.focus();  // Focus next input if current is filled
+
+    if (value && index < 5) {
+      document.getElementById(`otp-${index + 1}`)?.focus();
     }
   };
 
-  const onSubmit = async () => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+  if (e.key === "Backspace") {
+    e.preventDefault();
+    const newOtp = [...otp];
+
+    if (newOtp[index]) {
+      // If current input has value → clear it
+      newOtp[index] = "";
+      setOtp(newOtp);
+    } else if (index > 0) {
+      // If empty → go to previous and clear
+      document.getElementById(`otp-${index - 1}`)?.focus();
+      newOtp[index - 1] = "";
+      setOtp(newOtp);
+    }
+  }
+
+  if (e.key === "ArrowLeft" && index > 0) {
+    e.preventDefault();
+    document.getElementById(`otp-${index - 1}`)?.focus();
+  }
+
+  if (e.key === "ArrowRight" && index < 5) {
+    e.preventDefault();
+    document.getElementById(`otp-${index + 1}`)?.focus();
+  }
+};
+
+  
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     const otpValue = otp.join("");
+    if (otpValue.length !== 6) {
+      toast.error("❌ OTP must be 6 digits", { theme: "dark" });
+      return;
+    }
+
     try {
-      await api.post("/auth/verify-otp", { otp: otpValue });
-      toast.success("✅ OTP verified successfully", { theme: "dark" });
-      router.push("/auth/reset-password");  // Navigate to reset password page
-    } catch (err: any) {
-      toast.error(
-        err.response?.status === 400
-          ? "❌ Invalid OTP"
-          : "❌ OTP verification failed",
-        { theme: "dark" }
-      );
+      const res= await api.post("/auth/verify-otp", { email, otp: otpValue });
+      localStorage.removeItem("forgotPasswordEmail");
+      localStorage.setItem("resetToken", res.data.resetToken);
+      console.log(res.data.resetToken);
+      toast.success("✅ OTP verified", { theme: "dark" });
+      router.push("/resetpassword");
+    } catch {
+      toast.error("❌ Invalid or expired OTP");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <div className="flex justify-between gap-4">
-        {otp.map((digit, index) => (
+    <form onSubmit={onSubmit} className="space-y-6">
+      <div className="flex gap-4 justify-center">
+        {otp.map((digit, i) => (
           <input
-            key={index}
+            key={i}
+            id={`otp-${i}`}
             type="text"
-            id={`otp-${index}`}
             maxLength={1}
             value={digit}
-            onChange={(e) => handleOtpChange(e, index)}
-            className={`w-12 h-12 text-center text-2xl bg-gray-700 text-white border ${errors.otp ? "border-red-500" : "border-gray-600"}`}
+            onChange={(e) => handleOtpChange(e.target.value, i)}
+            onKeyDown={(e) => handleKeyDown(e, i)}
+            className="w-12 h-12 text-center text-3xl bg-gray-700 text-white border-2 border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 rounded-xl transition-all duration-200"
           />
         ))}
       </div>
-      {errors.otp && (
-        <p className="text-red-500 text-sm mt-1">{errors.otp.message}</p>
-      )}
 
-      {/* Submit */}
-      <button
-        type="submit"
-        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-semibold flex items-center justify-center gap-2"
-      >
+      <button className="w-full bg-blue-600 py-3 rounded-lg text-white">
         Verify OTP
       </button>
     </form>
