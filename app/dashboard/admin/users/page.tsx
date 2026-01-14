@@ -10,7 +10,6 @@ export default function UsersPage() {
 
   const fetchUsers = async () => {
     const res = await UserService.getAll();
-    console.log(res);
     setUsers(res.data);
   };
 
