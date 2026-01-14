@@ -1,6 +1,12 @@
+import { User } from "@/app/types/user.type";
 import UserRow from "./UserRow";
 
-export default function UserTable({ users, refresh }) {
+interface UserTableProps {
+  users: User[];
+  refresh: () => void;
+}
+
+export default function UserTable({ users, refresh }: UserTableProps) {
   return (
     <div className="rounded-xl m-6 overflow-hidden bg-gradient-to-br from-[#0b1220] to-[#020617]">
       <table className="w-full text-left">
@@ -14,8 +20,12 @@ export default function UserTable({ users, refresh }) {
           </tr>
         </thead>
         <tbody>
-          {users.map(user => (
-            <UserRow key={user.id} user={user} refresh={refresh} />
+          {users.map((user: User) => (
+            <UserRow
+              key={user.user_id}
+              user={user}
+              refresh={refresh}
+            />
           ))}
         </tbody>
       </table>
