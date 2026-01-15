@@ -109,7 +109,7 @@ export default function Homepage() {
   ];
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-black-800">
       
       {/* Hero/Welcome Section */}
       <section className="bg-gradient-to-b from-black via-gray-900 to-black py-20 px-4">
