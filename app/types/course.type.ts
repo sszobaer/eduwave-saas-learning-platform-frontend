@@ -4,5 +4,8 @@ export interface Course {
   description: string;
   price: number;
   thumbnail_url: string;
-  tag_names: string[];
+  tags: string[];
+  created_by_user: {
+    full_name: string;
+  };
 }

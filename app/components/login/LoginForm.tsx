@@ -3,7 +3,7 @@
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { Mail, ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -54,6 +54,8 @@ export default function LoginForm() {
 
 
     return (
+        <>
+        <ToastContainer/>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Email */}
             <div>
@@ -105,5 +107,6 @@ export default function LoginForm() {
                 Sign In <ArrowRight size={20} />
             </button>
         </form>
+        </>
     );
 }

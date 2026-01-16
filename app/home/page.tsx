@@ -1,5 +1,4 @@
 'use client';
-import React, { useState } from 'react';
 import {BookOpen, Clock, Users, ArrowRight } from 'lucide-react';
 import Footer from '../components/footer';
 
@@ -109,7 +108,7 @@ export default function Homepage() {
   ];
 
   return (
-    <div className="min-h-screen bg-black-800">
+    <div className="min-h-screen bg-black">
       
       {/* Hero/Welcome Section */}
       <section className="bg-gradient-to-b from-black via-gray-900 to-black py-20 px-4">
