@@ -11,11 +11,11 @@ export default function Sidebar() {
         <Link href="/dashboard/admin" className="block hover:text-purple-400">
           Dashboard
         </Link>
-        <Link href="/dashboard//admin/courses" className="block hover:text-purple-400">
-          Courses
-        </Link>
-        <Link href="/dashboard//admin/users" className="block hover:text-purple-400">
+        <Link href="/dashboard/admin/users" className="block hover:text-purple-400">
           Users
+        </Link>
+        <Link href="/dashboard/admin/teachers" className="block hover:text-purple-400">
+          Teacher Approval
         </Link>
         <Link href="/dashboard/admin/settings" className="block hover:text-purple-400">
           Settings
