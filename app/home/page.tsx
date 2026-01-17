@@ -1,5 +1,4 @@
 'use client';
-import React, { useState } from 'react';
 import {BookOpen, Clock, Users, ArrowRight } from 'lucide-react';
 import Footer from '../components/footer';
 

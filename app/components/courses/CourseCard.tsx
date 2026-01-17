@@ -1,3 +1,4 @@
+import { ArrowRight, BookOpen } from "lucide-react";
 import { Course } from "@/app/types/course.type";
 
 interface Props {
@@ -8,41 +9,68 @@ export default function CourseCard({ course }: Props) {
   const imageUrl = `http://localhost:3000${course.thumbnail_url}`;
 
   return (
-    <div className="relative rounded-2xl bg-gradient-to-br from-[#0f172a] to-[#020617] border border-white/10 shadow-lg hover:shadow-purple-500/20 transition-all duration-300 hover:-translate-y-1">
+    <div className="group bg-gradient-to-b from-[#0f172a] to-[#020617] border border-white/10 rounded-2xl overflow-hidden shadow-lg hover:shadow-purple-900/30 transition-all duration-300 h-[420px] flex flex-col">
 
-      {/* Image */}
-      <div className="relative h-44 overflow-hidden rounded-t-2xl">
+      {/* Thumbnail */}
+      <div className="relative h-44 shrink-0">
         <img
           src={imageUrl}
           alt={course.title}
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
 
-        {/* Category badge */}
-        <span className="absolute top-4 left-4 bg-gradient-to-r from-blue-500 to-purple-500 text-xs font-semibold px-3 py-1 rounded-full">
-          Course
-        </span>
+        {course.tags?.[0] && (
+          <span className="absolute top-3 left-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
+            {course.tags[0]}
+          </span>
+        )}
+
+        <div className="absolute top-3 right-3 bg-black/40 p-2 rounded-full">
+          <BookOpen className="text-purple-400" size={18} />
+        </div>
       </div>
 
       {/* Content */}
-      <div className="p-6">
-        <h3 className="text-lg font-semibold mb-2">
+      <div className="p-5 flex flex-col flex-1">
+        <h3 className="text-lg font-bold text-white mb-2 line-clamp-1">
           {course.title}
         </h3>
 
-        <p className="text-sm text-gray-400 line-clamp-2 mb-4">
+        <p className="text-sm text-gray-400 mb-3 line-clamp-2">
           {course.description}
         </p>
 
-        {/* Footer */}
-        <div className="flex items-center justify-between mt-auto">
-          <span className="text-purple-400 font-bold">
-            ৳ {course.price}
-          </span>
+        {/* Tags */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {course.tags?.slice(0, 3).map((tag) => (
+            <span
+              key={tag}
+              className="text-xs px-2 py-1 rounded-full bg-purple-600/20 text-purple-300"
+            >
+              #{tag}
+            </span>
+          ))}
+        </div>
 
-          <button className="px-4 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:opacity-90 transition">
-            View Details
-          </button>
+        {/* Footer */}
+        <div className="mt-auto pt-4 border-t border-white/10 flex items-center justify-between">
+          <div>
+            <span className="text-xs text-gray-400 block">By</span>
+            <span className="text-sm font-medium text-white">
+              {course.created_by_user.full_name}
+            </span>
+          </div>
+
+          <div className="text-right">
+            <span className="text-lg font-bold text-green-400 block">
+              ৳ {Number(course.price).toLocaleString()}
+            </span>
+
+            <button className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition">
+              Details
+              <ArrowRight size={14} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
