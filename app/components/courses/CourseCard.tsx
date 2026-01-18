@@ -1,5 +1,6 @@
 import { ArrowRight, BookOpen } from "lucide-react";
 import { Course } from "@/app/types/course.type";
+import Link from "next/link";
 
 interface Props {
   course: Course;
@@ -47,7 +48,7 @@ export default function CourseCard({ course }: Props) {
               key={tag}
               className="text-xs px-2 py-1 rounded-full bg-purple-600/20 text-purple-300"
             >
-              #{tag}
+              {tag}
             </span>
           ))}
         </div>
@@ -66,10 +67,13 @@ export default function CourseCard({ course }: Props) {
               ৳ {Number(course.price).toLocaleString()}
             </span>
 
-            <button className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition">
-              Details
-              <ArrowRight size={14} />
-            </button>
+
+            <Link href={`/courses/${course.course_id}`}>
+              <button className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition">
+                Details
+                <ArrowRight size={14} />
+              </button>
+            </Link>
           </div>
         </div>
       </div>
