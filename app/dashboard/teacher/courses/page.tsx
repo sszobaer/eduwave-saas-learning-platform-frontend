@@ -16,6 +16,7 @@ import { getTeacherStates } from "@/app/services/states.service";
 import { AuthContext } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import React, { useContext } from 'react'
+import { ToastContainer } from "react-toastify";
 
 export default function TeacherDashboardPage({ initialUser }: { initialUser?: any }) {
     const [courses, setCourses] = useState<Course[]>([]);
@@ -71,6 +72,8 @@ export default function TeacherDashboardPage({ initialUser }: { initialUser?: an
     if (error) return <p className="p-6 text-red-500">{error}</p>;
 
     return (
+        <> 
+        <ToastContainer/>
         <AuthProvider initialUser={initialUser}>
             <div className="p-8 space-y-10">
                 <Topbar />
@@ -92,6 +95,7 @@ export default function TeacherDashboardPage({ initialUser }: { initialUser?: an
                 </section>
             </div>
         </AuthProvider>
+        </>
     );
 }
 

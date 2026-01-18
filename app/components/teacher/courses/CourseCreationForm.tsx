@@ -38,34 +38,28 @@ export default function CourseForm() {
     formData.append("description", data.description);
     formData.append("price", String(data.price));
     formData.append("thumbnail_url", data.thumbnail_img[0]); // Ensure the key matches the backend
-    formData.append("tag_names", JSON.stringify(tags)); // Ensure the backend receives tags as an array
-
-    console.log("Form Data:", formData);
-
-    console.log("Thumbnail: ", thumbnail);
-    formData.append("tag_names", JSON.stringify(tags));  // Ensure tags are sent as an array
-
+    tags.forEach((tag) => {
+      if (tag.trim()) {
+        formData.append("tag_names", tag.trim());
+      }
+    });
 
     setLoading(true);
 
-    // Try sending the form data
     const response = await api.post("/courses/create", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-    console.log("Response: ", response.data);
-    // If successful, show success toast
+    
     toast.success("✅ Course created successfully", { theme: "dark" });
 
   } catch (error) {
     console.error("Error creating course", error);
 
-    // Log the error details to see what's causing it
     if (axios.isAxiosError(error)) {
-      // Axios-specific error handling
-      console.error("Axios error:", error.response?.data || error.message);
+      
       toast.error(`Error creating course: ${error.response?.data || error.message}`, { theme: "dark" });
     } else {
-      // Non-Axios error handling
+
       toast.error("Error creating course", { theme: "dark" });
     }
   } finally {
@@ -74,16 +68,13 @@ export default function CourseForm() {
 };
 
 
-
   return (
   <form
     onSubmit={handleSubmit(handleSubmitForm)}
     className="space-y-6 bg-[#1e293b] p-8 rounded-lg shadow-lg backdrop-blur-lg bg-opacity-40 border border-white/10"
   >
-    {/* 1st Row: Title, Price, Tags, Thumbnail */}
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       
-      {/* Course Title */}
       <div className="flex flex-col">
         <label className="text-white text-sm mb-1">Course Title</label>
         <input
@@ -97,7 +88,6 @@ export default function CourseForm() {
         )}
       </div>
 
-      {/* Price */}
       <div className="flex flex-col">
         <label className="text-white text-sm mb-1">Price</label>
         <input
@@ -112,23 +102,19 @@ export default function CourseForm() {
         )}
       </div>
 
-      {/* Tags */}
       <div className="flex flex-col">
         <label className="text-white text-sm mb-1">Tags</label>
         <input
-        value={tags.join(", ")}  // Join array to display tags
+        value={tags.join(", ")}  
         onChange={(e) =>
-        setTags(e.target.value.split(",").map(tag => tag.trim()))  // Split and clean up tags
+        setTags(e.target.value.split(",").map(tag => tag.trim()))
   }
   placeholder="Enter tags separated by commas"
   className="p-3 rounded-lg bg-[#334155] text-white border border-white/10 focus:outline-none focus:border-purple-500 transition"
 />
 
-
-
       </div>
 
-      {/* Thumbnail */}
       <div className="flex flex-col">
         <label className="text-white text-sm mb-1">Thumbnail Image</label>
         <ThumbnailImageUpload
@@ -139,7 +125,6 @@ export default function CourseForm() {
 
     </div>
 
-    {/* 2nd Row: Description */}
     <div className="flex flex-col">
       <label className="text-white text-sm mb-1">Description</label>
       <textarea
@@ -156,7 +141,6 @@ export default function CourseForm() {
       )}
     </div>
 
-    {/* Submit Button */}
     <button
       type="submit"
       disabled={loading}
