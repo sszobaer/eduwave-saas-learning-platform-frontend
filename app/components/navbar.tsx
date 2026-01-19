@@ -79,36 +79,7 @@ export default function Navbar() {
               </Link>
             )}
 
-            {user && (
-              <div className="relative ml-3">
-                <img
-                  src={profileImg}
-                  alt="profile"
-                  className="h-9 w-9 rounded-full cursor-pointer border-2 border-white/20 hover:border-purple-400 transition"
-                  onClick={() =>
-                    setProfileDropdownOpen(!profileDropdownOpen)
-                  }
-                />
-
-                {profileDropdownOpen && (
-                  <div className="absolute right-0 mt-3 w-52 bg-[#020617] border border-white/10 rounded-xl shadow-xl overflow-hidden z-50">
-                    <Link
-                      href={getDashboardPath()}
-                      className="block px-4 py-3 text-sm text-gray-200 hover:bg-white/5 transition"
-                      onClick={() => setProfileDropdownOpen(false)}
-                    >
-                      Dashboard
-                    </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 transition"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
+            
           </div>
 
           {/* Mobile toggle */}
@@ -146,24 +117,6 @@ export default function Navbar() {
               >
                 Login
               </Link>
-            )}
-
-            {user && (
-              <>
-                <Link
-                  href={getDashboardPath()}
-                  className="block px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Dashboard
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="block w-full text-left px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-lg"
-                >
-                  Logout
-                </button>
-              </>
             )}
           </div>
         )}
