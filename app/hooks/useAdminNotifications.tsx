@@ -13,7 +13,6 @@ export const useAdminNotifications = () => {
     const channel = pusher.subscribe("admin-channel"); // Match backend
 
     channel.bind("new-teacher", (data: any) => {
-      console.log("Received Pusher event:", data);
       setNotifications(prev => [data, ...prev]);
     });
 
