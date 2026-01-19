@@ -9,28 +9,27 @@ export default function DashboardRedirect() {
   const router = useRouter();
 
   useEffect(() => {
-    if (loading) return; // wait until user is loaded
+    if (loading) return; 
 
     if (!user) {
-      router.push("/login");
+      router.replace("/login"); 
       return;
     }
 
     switch (user.role) {
       case "STUDENT":
-        router.push("/dashboard/student");
+        router.replace("/dashboard/student");
         break;
       case "ADMIN":
-        router.push("/dashboard/admin");
+        router.replace("/dashboard/admin");
         break;
       case "TEACHER":
-        router.push("/dashboard/teacher");
+        router.replace("/dashboard/teacher");
         break;
       default:
-        router.push("/login");
-        break;
+        router.replace("/login");
     }
-  }, [user, loading]);
+  }, [user, loading, router]);
 
-  return null; // or loader
+  return null;
 }
