@@ -17,9 +17,9 @@ export default function Navbar() {
     : "/default-avatar.png";
 
   const getDashboardPath = () => {
-    if (!user || !user.role?.role_name) return "/login";
+    if (!user || !user.role) return "/login";
 
-    switch (user.role.role_name) {
+    switch (user.role) {
       case "ADMIN":
         return "/dashboard/admin";
       case "TEACHER":
