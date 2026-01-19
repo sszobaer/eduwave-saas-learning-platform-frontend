@@ -2,7 +2,7 @@
 
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AuthContext } from "@/app/context/AuthContext";
+import { AuthContext, AuthProvider } from "@/app/context/AuthContext";
 
 import LoadingScreen from "@/app/components/student/LoadingScreen";
 import ErrorAlert from "@/app/components/student/ErrorAlert";
@@ -24,42 +24,35 @@ export default function StudentDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [loadingData, setLoadingData] = useState(false);
 
-  /* 🔐 AUTH GUARD */
-  useEffect(() => {
-    if (!loading && (!user || user.role !== "STUDENT")) {
-      router.push("/login");
-    }
-  }, [user, loading, router]);
-
   const fetchEnrollments = async () => {
-  if (!user) return;
+    if (!user) return;
+    console.log(user);
 
-  try {
-    setLoadingData(true);
-    setError(null);
+    try {
+      setLoadingData(true);
+      setError(null);
 
-    const res = await axios.get(`http://localhost:3000/enrollment/student/${user.id}`);
+      const res = await axios.get(`http://localhost:3000/enrollment/student/${user.user_id}`);
 
-    let enrollmentsArray = [];
+      let enrollmentsArray = [];
 
-    // ✅ CASE 1: backend returns array
-    if (Array.isArray(res.data)) {
-      enrollmentsArray = res.data;
+      if (Array.isArray(res.data)) {
+        enrollmentsArray = res.data;
+      }
+
+      else if (res.data && typeof res.data === "object") {
+        enrollmentsArray = [res.data];
+      }
+
+      setEnrollments(enrollmentsArray);
+    } catch (err) {
+      console.error(err);
+      setEnrollments([]);
+      setError("Failed to load enrolled courses");
+    } finally {
+      setLoadingData(false);
     }
-    // ✅ CASE 2: backend returns single object (YOUR CASE)
-    else if (res.data && typeof res.data === "object") {
-      enrollmentsArray = [res.data];
-    }
-
-    setEnrollments(enrollmentsArray);
-  } catch (err) {
-    console.error(err);
-    setEnrollments([]);
-    setError("Failed to load enrolled courses");
-  } finally {
-    setLoadingData(false);
-  }
-};
+  };
 
 
   useEffect(() => {
@@ -71,31 +64,37 @@ export default function StudentDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <DashboardHeader user={user} />
+    <div className="m-6 min-h-screen bg-black text-white">
+      <AuthProvider>
+        <DashboardHeader user={user} />
 
-      <div className="max-w-7xl mx-auto p-6">
-        <DashboardTabs
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-        />
+        <div className="max-w-7xl mx-auto p-6">
+          <DashboardTabs
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          />
+          <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+            Logout
+          </div>
 
-        {loadingData ? (
-          <LoadingScreen text="Loading courses..." />
-        ) : (
-          <>
-            {activeTab === "overview" && (
-              <OverviewTab enrollments={enrollments} />
-            )}
-            {activeTab === "courses" && (
-              <CoursesTab enrollments={enrollments} />
-            )}
-            {activeTab === "progress" && (
-              <ProgressTab enrollments={enrollments} />
-            )}
-          </>
-        )}
-      </div>
+          {loadingData ? (
+            <LoadingScreen text="Loading courses..." />
+          ) : (
+            <>
+              {activeTab === "overview" && (
+                <OverviewTab enrollments={enrollments} />
+              )}
+              {activeTab === "courses" && (
+                <CoursesTab enrollments={enrollments} />
+              )}
+              {activeTab === "progress" && (
+                <ProgressTab enrollments={enrollments} />
+              )}
+
+            </>
+          )}
+        </div>
+      </AuthProvider>
     </div>
   );
 }

@@ -3,11 +3,8 @@
 import { AuthProvider } from "@/app/context/AuthContext";
 import Topbar from "@/app/components/admin/Topbar";
 import StatsCard from "@/app/components/admin/StatsCard";
-import CourseTable from "@/app/components/admin/CourseTable";
 import { useEffect, useState } from "react";
-import { getAllCourses } from "@/app/services/course.service";
-import { getStates } from "@/app/services/states.service"; // your backend endpoint
-import { Course } from "@/app/types/course.type";
+import { getStates } from "@/app/services/states.service"; 
 import { BarChartCard, LineChartCard, PieChartCard } from "@/app/components/admin/charts/ChartCard";
 
 export default function AdminDashboardPage({ initialUser }: { initialUser?: any }) {
