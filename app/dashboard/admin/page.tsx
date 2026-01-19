@@ -6,51 +6,76 @@ import StatsCard from "@/app/components/admin/StatsCard";
 import CourseTable from "@/app/components/admin/CourseTable";
 import { useEffect, useState } from "react";
 import { getAllCourses } from "@/app/services/course.service";
-import { getStates } from "@/app/services/states.service";
+import { getStates } from "@/app/services/states.service"; // your backend endpoint
 import { Course } from "@/app/types/course.type";
+import { BarChartCard, LineChartCard, PieChartCard } from "@/app/components/admin/charts/ChartCard";
 
 export default function AdminDashboardPage({ initialUser }: { initialUser?: any }) {
-    const [courses, setCourses] = useState<Course[]>([]);
-    const [stats, setStats] = useState<any>(null);
-    const [error, setError] = useState<string | null>(null);
+  const [stats, setStats] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchDashboard = async () => {
-            try {
-                const coursesData = await getAllCourses();
-                setCourses(coursesData);
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const statsData = await getStates();
+        setStats(statsData);
+      } catch (err: any) {
+        setError(err.response?.data?.message || err.message);
+      }
+    };
 
-                const statsData = await getStates();
-                setStats(statsData);
-            } catch (err: any) {
-                setError(err.response?.data?.message || err.message);
-            }
-        };
+    fetchDashboard();
+  }, []);
 
-        fetchDashboard();
-    }, []);
+  if (error) return <p className="p-6 text-red-500">{error}</p>;
 
-    if (error) return <p className="p-6 text-red-500">{error}</p>;
+  return (
+    <AuthProvider initialUser={initialUser}>
+      <div className="p-8 space-y-10">
+        <Topbar />
 
-    return (
-        <AuthProvider initialUser={initialUser}>
-            <div className="p-8 space-y-10">
-                <Topbar />
+        {/* Summary Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <StatsCard title="Total Courses" value={stats?.summary?.totalCourses ?? 0} />
+          <StatsCard title="Total Users" value={stats?.summary?.totalUsers ?? 0} />
+          <StatsCard title="Active Users" value={stats?.summary?.activeUsers ?? 0} />
+        </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <StatsCard title="Total Courses" value={stats?.totalCourses ?? 0} />
-                    <StatsCard title="Total Users" value={stats?.totalUsers ?? 0} />
-                    <StatsCard title="Active Users" value={stats?.activeUsers ?? 0} />
-                </div>
+        {/* Charts */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* User Growth */}
+          <LineChartCard
+            data={stats?.users?.growth ?? []}
+            dataKeyX="month"
+            dataKeyY="count"
+            title="User Growth Over Time"
+          />
 
-                <section>
-                    <h2 className="text-xl font-semibold mb-4">Manage Courses</h2>
-                    <CourseTable
-                        courses={courses}
-                        onDelete={(id: number) => setCourses(prev => prev.filter(c => c.course_id !== id))}
-                    />
-                </section>
-            </div>
-        </AuthProvider>
-    );
+          {/* Active vs Blocked */}
+          <PieChartCard
+            data={stats?.users?.status ?? []}
+            dataKey="value"
+            nameKey="name"
+            title="Active vs Blocked Users"
+          />
+
+          {/* Courses by Tag */}
+          <BarChartCard
+            data={stats?.courses?.byTag ?? []}
+            dataKey="count"
+            nameKey="tag"
+            title="Courses by Tag"
+          />
+
+          {/* Top Enrolled Courses */}
+          <BarChartCard
+            data={stats?.courses?.topEnrolled ?? []}
+            dataKey="enrollments"
+            nameKey="title"
+            title="Top Enrolled Courses"
+          />
+        </div>
+      </div>
+    </AuthProvider>
+  );
 }
