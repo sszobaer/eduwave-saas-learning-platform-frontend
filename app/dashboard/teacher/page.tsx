@@ -49,31 +49,6 @@ export default function TeacherDashboardPage({ initialUser }: { initialUser?: an
   const { user, loading } = useContext(AuthContext);
   const router = useRouter();
 
-    /*useEffect(() => {
-    if (loading) return;
-
-    if (!user || user.role !== "TEACHER") {
-      router.push("/login");
-      return;
-    }
-
-    const fetchDashboard = async () => {
-      try {
-        //const coursesData = await getAllCoursesByIndivisualUser();
-        const statsData = await getTeacherStates();
-
-        //setCourses(coursesData);
-        setStats(statsData);
-      } catch (err: any) {
-        setError(err.response?.data?.message || "Server error");
-      }
-    };
-
-    fetchDashboard();
-  }, [user, loading, router]);
-
-    if (loading) return <p>Loading...</p>;
-  */
  useEffect(() => {
          const fetchDashboard = async () => {
              try {
@@ -105,7 +80,7 @@ export default function TeacherDashboardPage({ initialUser }: { initialUser?: an
                 </div>
 
                 <section>
-                    <h2 className="text-xl font-semibold mb-4">Manage Courses</h2>
+                    
                     
                 </section>
             </div>

@@ -1,63 +1,41 @@
 "use client";
 
+import { useEffect, useState, useContext } from "react";
+import { useRouter } from "next/navigation";
+import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "@/app/context/AuthContext";
 import Topbar from "@/app/components/teacher/Topbar";
 import StatsCard from "@/app/components/teacher/StatsCard";
-import CourseTable from "@/app/components/admin/CourseTable";
-import { useEffect, useState } from "react";
-import { getAllCourses } from "@/app/services/course.service";
-import { getStates } from "@/app/services/states.service";
-import { Course } from "@/app/types/course.type";
+import CourseList from "@/app/components/teacher/courses/CourseList";
+import CourseHeader from "@/app/components/teacher/courses/CourseHeader";
 import ActionBar from "@/app/components/teacher/courses/Actionbar";
-import CourseCreationForm from "@/app/components/teacher/courses/CourseCreationForm";
+
+import { getAllCoursesByIndivisualUser } from "@/app/services/course.service";
 import { getTeacherStates } from "@/app/services/states.service";
-
-
-import { AuthContext } from '@/app/context/AuthContext';
-import { useRouter } from 'next/navigation';
-import React, { useContext } from 'react'
-import { ToastContainer } from "react-toastify";
+import { Course } from "@/app/types/course.type";
+import { getCourseReview } from "@/app/services/courseReview.service";
+import { useParams } from "next/navigation";
+import { AuthContext } from "@/app/context/AuthContext";
+import { CourseReview } from "@/app/types/courseReview.type";
 
 export default function TeacherDashboardPage({ initialUser }: { initialUser?: any }) {
     const [courses, setCourses] = useState<Course[]>([]);
+    const [courseReview, setCourseReview] = useState<CourseReview[]>([]);
     const [stats, setStats] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
-
-
-
+    const [searchTerm, setSearchTerm] = useState("");
     const { user, loading } = useContext(AuthContext);
     const router = useRouter();
-  /*  useEffect(() => {
-      if (loading) return; 
-      if (!user || user.role !== "TEACHER") {
-        router.push("/login");
-      }
-    }, [user, loading]);
-  
-    if (loading || !user) 
-      return <p>Loading...</p>;*/
-
-    /*useEffect(() => {
-      
-        const fetchDashboard = async () => {
-            try {
-                const coursesData = await getAllCourses();
-                setCourses(coursesData);
-
-                const statsData = await getStates();
-                setStats(statsData);
-            } catch (err: any) {
-                setError(err.response?.data?.message || err.message);
-            }
-        };
-
-        fetchDashboard();
-    }, []);*/
+    const { courseId } = useParams();
+    
     useEffect(() => {
              const fetchDashboard = async () => {
                  try {
-                    // const coursesData = await getAllCourses();
-                     //setCourses(coursesData);
+                     const coursesData = await getAllCoursesByIndivisualUser();
+                     setCourses(coursesData);
+
+                     const reviewsData = await getCourseReview();
+                     setCourseReview(reviewsData);
      
                      const statsData = await getTeacherStates();
                      setStats(statsData);
@@ -77,21 +55,18 @@ export default function TeacherDashboardPage({ initialUser }: { initialUser?: an
         <AuthProvider initialUser={initialUser}>
             <div className="p-8 space-y-10">
                 <Topbar />
-                <div><ActionBar/></div>
+                <div><ActionBar 
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}/></div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <StatsCard title="Total Courses" value={stats?.totalCourses ?? 0} />
-                    <StatsCard title="Total Students" value={stats?.totalUsers ?? 0} />
-                    <StatsCard title="Active Quizes" value={stats?.activeUsers ?? 0} />
-                    <StatsCard title="Earning" value={stats?.activeUsers ?? 0} />
-                </div>
+                <section className="min-h-screen bg-black text-white px-6 py-20">
+                <CourseHeader/>
 
-                <section>
-                    <h2 className="text-xl font-semibold mb-4">Manage Courses</h2>
-                    <CourseTable
-                        courses={courses}
-                        onDelete={(id: number) => setCourses(prev => prev.filter(c => c.course_id !== id))}
-                    />
+                 {/* Courses */}
+                 <div className="max-w-7xl mx-auto">
+                 <CourseList courses={courses} courseReviews={courseReview} searchTerm={searchTerm}/>
+
+                 </div>
                 </section>
             </div>
         </AuthProvider>
