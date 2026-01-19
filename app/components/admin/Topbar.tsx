@@ -53,7 +53,6 @@ export default function Topbar() {
       <h1 className="text-xl font-semibold">Admin Dashboard</h1>
 
       <div className="flex items-center gap-4 relative" ref={dropdownRef}>
-        {/* Notification Bell */}
         {user?.role?.role_name === "ADMIN" && (
           <div className="relative">
             <button

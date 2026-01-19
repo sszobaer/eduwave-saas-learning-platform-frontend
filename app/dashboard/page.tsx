@@ -12,22 +12,26 @@ export default function DashboardRedirect() {
     if (loading) return; 
 
     if (!user) {
-      router.replace("/login"); 
+      router.push("/login"); 
       return;
     }
 
+    // if(user.role.role_name === "STUDENT"){
+
+    // }
+
     switch (user.role) {
       case "STUDENT":
-        router.replace("/dashboard/student");
+        router.push("/dashboard/student");
         break;
       case "ADMIN":
-        router.replace("/dashboard/admin");
+        router.push("/dashboard/admin");
         break;
       case "TEACHER":
-        router.replace("/dashboard/teacher");
+        router.push("/dashboard/teacher");
         break;
       default:
-        router.replace("/login");
+        router.push("/login");
     }
   }, [user, loading, router]);
 

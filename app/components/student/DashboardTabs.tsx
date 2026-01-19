@@ -18,7 +18,7 @@ const DashboardTabs = ({
       <button
         key={tab.id}
         onClick={() => setActiveTab(tab.id)}
-        className={`flex items-center gap-2 px-4 py-2 rounded-lg ${
+        className={`flex items-center gap-2 px-4 py-2 m-3 rounded-lg ${
           activeTab === tab.id
             ? "bg-blue-600 text-white"
             : "bg-gray-800 text-gray-400 hover:bg-gray-700"

@@ -17,43 +17,46 @@ export default function EnrollCard({ course }: Props) {
   const link = `/courses/enrollment/${course.course_id}`;
 
   const onSubmit = async () => {
-  if (user === null) {
-    router.push("/login");
-    return;
-  }
+    if (user === null) {
+      router.push("/login");
+      return;
+    }
 
-  const studentId = Number(user.id);
-  const courseId = Number(course.course_id);
+    const studentId = Number(user.user_id);
+    const courseId = Number(course.course_id);
 
-  if (!studentId || studentId <= 0 || !courseId || courseId <= 0) {
-    console.error("Invalid student ID or course ID");
-    setError("Something went wrong...");
-    return;
-  }
+    console.log(studentId, courseId);
 
-  try {
-    const response = await api.post(
-      "/enrollment/create",
-      {
+    if (!studentId || studentId <= 0 || !courseId || courseId <= 0) {
+      console.error("Invalid student ID or course ID");
+      setError("Something went wrong...");
+      return;
+    }
+
+    try {
+      const response = await api.post(
+        "/enrollment/create",
+        {
+          student_user_id: studentId,
+          course_id: courseId,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+      console.log("Enrollment payload:", {
         student_user_id: studentId,
         course_id: courseId,
-      },
-      {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      }
-    );
-
-    if (response.status === 200) {
+      });
+      
       router.push(`/courses/enrollment/${course.course_id}`);
-    } else {
+
+    } catch (err) {
+      console.error(err);
       setError("Something went wrong...");
     }
-  } catch (err) {
-    console.error(err);
-    setError("Something went wrong...");
-  }
-};
+  };
 
 
   return (
