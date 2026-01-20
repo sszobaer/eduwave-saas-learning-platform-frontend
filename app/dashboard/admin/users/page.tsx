@@ -18,8 +18,8 @@ export default function UsersPage() {
   }, []);
 
   return (
-    <div>
-        <Topbar/>
+    <div className="min-h-screen bg-gradient-to-br from-[#0B0F1A] via-[#0F172A] to-[#020617] text-gray-100 p-8 space-y-10">
+    <Topbar />
       <h1 className="text-2xl font-semibold m-6">User Management</h1>
       <UserTable users={users} refresh={fetchUsers} />
     </div>

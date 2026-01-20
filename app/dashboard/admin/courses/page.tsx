@@ -22,8 +22,8 @@ const AdminCoursePage = () => {
     }, []);
     return (
         <>
-        <Topbar/>
-        <div className='p-6'>
+        <div className="min-h-screen bg-gradient-to-br from-[#0B0F1A] via-[#0F172A] to-[#020617] text-gray-100 p-8 space-y-10">
+        <Topbar />
             <section>
                 <h2 className="text-xl font-semibold mb-4">Manage Courses</h2>
                 <CourseTable

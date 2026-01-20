@@ -19,12 +19,12 @@ export const AuthContext = createContext<AuthContextType>({
 
 interface AuthProviderProps {
   children: ReactNode;
-  initialUser?: AuthorizedUser | null; // optional initial user
+  initialUser?: AuthorizedUser | null; 
 }
 
 export function AuthProvider({ children, initialUser = null }: AuthProviderProps) {
   const [user, setUser] = useState<AuthorizedUser | null>(initialUser);
-  const [loading, setLoading] = useState(!initialUser); // loading only if no initial user
+  const [loading, setLoading] = useState(!initialUser); 
 
   useEffect(() => {
     if (initialUser) return; // already have user

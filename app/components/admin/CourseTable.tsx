@@ -58,7 +58,7 @@ export default function CourseTable({ courses, onDelete }: Props) {
                   onClick={() => handleEdit(course.course_id)}
                   className="px-3 py-1 rounded bg-blue-500/20 text-blue-400"
                 >
-                  Edit
+                  View
                 </button>
                 <button
                   onClick={() => setConfirmId(course.course_id)}

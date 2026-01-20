@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { UserService } from "@/app/services/user.service";
 import { User } from "@/app/types/user.type";
 import EditUserModal from "@/app/components/admin/users/EditUserModal";
+import Topbar from "@/app/components/admin/Topbar";
 
 export default function UserDetailsPage() {
   const { id } = useParams();
@@ -31,16 +32,10 @@ export default function UserDetailsPage() {
 
   return (
     <>
-      <div className="max-w-3xl bg-gradient-to-br from-[#0b1220] to-[#020617] p-6 rounded-xl relative">
-        {/* Header */}
+      <div className="min-h-screen bg-gradient-to-br from-[#0B0F1A] via-[#0F172A] to-[#020617] text-gray-100 p-8 space-y-10">
+      <Topbar />
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-semibold">User Details</h1>
-          <button
-            onClick={() => setOpenEdit(true)}
-            className="px-4 py-2 bg-blue-600 rounded text-sm hover:bg-blue-500"
-          >
-            Edit User
-          </button>
         </div>
 
         {/* Profile */}

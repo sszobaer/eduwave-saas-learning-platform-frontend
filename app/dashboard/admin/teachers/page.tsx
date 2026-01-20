@@ -31,8 +31,8 @@ export default function TeacherApprovalPage() {
 
     return (
         <>
+            <div className="min-h-screen bg-gradient-to-br from-[#0B0F1A] via-[#0F172A] to-[#020617] text-gray-100 p-8 space-y-10">
             <Topbar />
-            <div className="rounded-xl m-6 overflow-hidden bg-gradient-to-br from-[#0b1220] to-[#020617]">
                 <table className="w-full text-left">
                     <thead className="bg-black/40 text-gray-300">
                         <tr>
