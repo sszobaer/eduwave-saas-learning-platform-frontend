@@ -29,7 +29,7 @@ export default function EnrollCard({ course }: Props) {
 
     if (!studentId || studentId <= 0 || !courseId || courseId <= 0) {
       console.error("Invalid student ID or course ID");
-      setError("Something went wrong...");
+      setError("Already Enroll this Course");
       return;
     }
 
@@ -54,7 +54,7 @@ export default function EnrollCard({ course }: Props) {
 
     } catch (err) {
       console.error(err);
-      setError("Something went wrong...");
+      setError("Already Enroll this Course...");
     }
   };
 
