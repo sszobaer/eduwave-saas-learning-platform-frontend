@@ -17,7 +17,6 @@ import {
   LabelList,
 } from "recharts";
 
-// Vibrant color palette
 const COLORS = [
   "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40", "#00C49F", "#FF6699"
 ];
@@ -32,8 +31,9 @@ interface LineChartProps {
 
 export function LineChartCard({ data, dataKeyX, dataKeyY, title }: LineChartProps) {
   return (
-    <div className="bg-gray-800 p-4 rounded shadow hover:shadow-lg transition-shadow duration-300">
-      <h3 className="text-white font-semibold mb-2">{title}</h3>
+    <div className="rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 p-5 shadow-lg shadow-purple-900/20 hover:shadow-purple-600/30 transition-all duration-300">
+
+      <h3 className="text-lg font-semibold text-purple-300 mb-3">{title}</h3>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="#444" />
@@ -68,8 +68,8 @@ interface BarChartProps {
 
 export function BarChartCard({ data, dataKey, nameKey, title }: BarChartProps) {
   return (
-    <div className="bg-gray-800 p-4 rounded shadow hover:shadow-lg transition-shadow duration-300">
-      <h3 className="text-white font-semibold mb-2">{title}</h3>
+     <div className="rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 p-5 shadow-lg shadow-purple-900/20 hover:shadow-purple-600/30 transition-all duration-300">
+      <h3 className="text-lg font-semibold text-purple-300 mb-3">{title}</h3>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="#444" />
@@ -95,8 +95,8 @@ export function BarChartCard({ data, dataKey, nameKey, title }: BarChartProps) {
 // Pie Chart Card
 export function PieChartCard({ data, dataKey, nameKey, title }: BarChartProps) {
   return (
-    <div className="bg-gray-800 p-4 rounded shadow hover:shadow-lg transition-shadow duration-300">
-      <h3 className="text-white font-semibold mb-2">{title}</h3>
+     <div className="rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 p-5 shadow-lg shadow-purple-900/20 hover:shadow-purple-600/30 transition-all duration-300">
+      <h3 className="text-lg font-semibold text-purple-300 mb-3">{title}</h3>
       <ResponsiveContainer width="100%" height={250}>
         <PieChart>
           <Pie

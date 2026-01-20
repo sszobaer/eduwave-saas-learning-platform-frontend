@@ -16,9 +16,7 @@ export default function DashboardRedirect() {
       return;
     }
 
-    // if(user.role.role_name === "STUDENT"){
 
-    // }
 
     switch (user.role) {
       case "STUDENT":

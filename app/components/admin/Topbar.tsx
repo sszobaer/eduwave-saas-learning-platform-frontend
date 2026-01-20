@@ -6,8 +6,10 @@ import { logout } from "@/app/services/logout.service";
 import { useAdminNotifications } from "@/app/hooks/useAdminNotifications";
 import { Bell } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function Topbar() {
+  const router = useRouter();
   const { user, setUser, loading } = useContext(AuthContext);
 
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -49,7 +51,8 @@ export default function Topbar() {
   };
 
   return (
-    <header className="flex justify-between items-center px-8 py-4 border-b border-white/10 relative">
+    <header className="relative z-50 flex justify-between items-center px-8 py-5 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg" >
+
       <h1 className="text-xl font-semibold">Admin Dashboard</h1>
 
       <div className="flex items-center gap-4 relative" ref={dropdownRef}>
@@ -132,7 +135,7 @@ export default function Topbar() {
                 className="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 onClick={() => {
                   setProfileDropdownOpen(false);
-                  window.location.href = "/profile";
+                  router.push("/dashboard/admin/profile");
                 }}
               >
                 View Profile
